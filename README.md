@@ -25,10 +25,17 @@ Running the Program:
 ------------------
 1. Make sure you have the input.txt file in the same directory as the executable
 2. Run the program using:
-    ./bankers
-3. Test with the following test cases: (0 1 0 0), (0 4 4 4), (0 8 0 0).
+    ./memory_allocator
+3. Test with //fix this
 4. To quit, press 'q'
 
 Input File Format:
 ----------------
 The input.txt file should follow this format:
+1000
+1 100
+2 200
+3 150
+4 50
+5 125
+6 75
