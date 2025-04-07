@@ -16,9 +16,10 @@ This program simulates the banker's algorithm to avoid a deadlock for systems wi
 
 Compilation Instructions:
 ------------------------
-fix this
-To compile the program, use the following command:
-    gcc bankers.c -static -o bankers
+
+To compile the program, use the following command: make
+
+If that doesn't work, use this command: gcc continuous_memory_allocator.c -static -o memory_allocator -lm
 
 Running the Program:
 ------------------
