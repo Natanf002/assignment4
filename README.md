@@ -32,10 +32,4 @@ Running the Program:
 Input File Format:
 ----------------
 The input.txt file should follow this format:
-1000
-1 100
-2 200
-3 150
-4 50
-5 125
-6 75
+<Process_ID> <Size_in_KB>
