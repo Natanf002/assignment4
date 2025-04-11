@@ -2,7 +2,7 @@
 
 # Compiler and flags
 CC = gcc
-CFLAGS = -Wall -static
+CFLAGS = -Wall
 
 # Target executable
 TARGET = memory_allocator

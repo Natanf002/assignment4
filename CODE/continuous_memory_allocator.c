@@ -94,7 +94,7 @@ int find_best_fit(MemoryManager *manager, int size);
 int find_worst_fit(MemoryManager *manager, int size);
 bool allocate_memory(MemoryManager *manager, Process *process);
 void deallocate_memory(MemoryManager *manager, Process *process);
-bool coalesce_memory(MemoryManager *manager, Process processes[]); // New separate coalescing function
+bool coalesce_memory(MemoryManager *manager, Process processes[]);
 bool read_processes_from_file(const char *filename, Process processes[], int *num_processes, int *memory_size);
 void print_memory_state_simplified(MemoryManager *manager, Process processes[], int num_processes);
 void print_memory_state_detailed(MemoryManager *manager, Process processes[], int num_processes);
@@ -119,12 +119,13 @@ void run_simulation(MemoryManager *manager, AllocationStrategy strategy, Process
  */
 int find_first_fit(MemoryManager *manager, int size)
 {
-    // TO BE IMPLEMENTED BY STUDENTS
-    /* Hint:
-       - Iterate through all blocks
-       - Find the first free block with size >= requested size
-       - Return its index or -1 if none is found
-    */
+    for (int i = 0; i < manager->block_count; i++) {
+        // Check if block is free and large enough
+        if (manager->blocks[i].is_free && manager->blocks[i].size >= size) {
+            return i;  // Return the first suitable block's index
+        }
+    }
+    return -1;  // No suitable block found
 }
 
 /**
@@ -142,12 +143,21 @@ int find_first_fit(MemoryManager *manager, int size)
  */
 int find_best_fit(MemoryManager *manager, int size)
 {
-    // TO BE IMPLEMENTED BY STUDENTS
-    /* Hint:
-       - Iterate through all blocks
-       - Find the free block with size >= requested size that has the smallest size difference
-       - Return its index or -1 if none is found
-    */
+    int best_fit_index = -1;
+    int smallest_difference = INT_MAX;
+
+    for (int i = 0; i < manager->block_count; i++) {
+        // Check if block is free and large enough
+        if (manager->blocks[i].is_free && manager->blocks[i].size >= size) {
+            int difference = manager->blocks[i].size - size;
+            // Update if this is the smallest difference found so far
+            if (difference < smallest_difference) {
+                smallest_difference = difference;
+                best_fit_index = i;
+            }
+        }
+    }
+    return best_fit_index;
 }
 
 /**
@@ -165,12 +175,21 @@ int find_best_fit(MemoryManager *manager, int size)
  */
 int find_worst_fit(MemoryManager *manager, int size)
 {
-    // TO BE IMPLEMENTED BY STUDENTS
-    /* Hint:
-       - Iterate through all blocks
-       - Find the free block with size >= requested size that has the largest size difference
-       - Return its index or -1 if none is found
-    */
+    int worst_fit_index = -1;
+    int largest_difference = -1;
+
+    for (int i = 0; i < manager->block_count; i++) {
+        // Check if block is free and large enough
+        if (manager->blocks[i].is_free && manager->blocks[i].size >= size) {
+            int difference = manager->blocks[i].size - size;
+            // Update if this is the largest difference found so far
+            if (difference > largest_difference) {
+                largest_difference = difference;
+                worst_fit_index = i;
+            }
+        }
+    }
+    return worst_fit_index;
 }
 
 /**
@@ -188,14 +207,33 @@ int find_worst_fit(MemoryManager *manager, int size)
  */
 bool coalesce_memory(MemoryManager *manager, Process processes[])
 {
-    // TO BE IMPLEMENTED BY STUDENTS
-    /* Hint:
-       - Check each block and the next one
-       - If both are free, merge them
-       - Update the data structures accordingly
-       - Continue until no more merges are possible
-       - Remember to update process block indices
-    */
+    bool merged = false;
+    
+    for (int i = 0; i < manager->block_count - 1; i++) {
+        // Check if current block and next block are both free
+        if (manager->blocks[i].is_free && manager->blocks[i + 1].is_free) {
+            // Merge the blocks
+            manager->blocks[i].size += manager->blocks[i + 1].size;
+            
+            // Shift remaining blocks left
+            for (int j = i + 1; j < manager->block_count - 1; j++) {
+                manager->blocks[j] = manager->blocks[j + 1];
+            }
+            
+            // Update process block indices that were after the merged block
+            for (int j = 0; j < MAX_PROCESSES; j++) {
+                if (processes[j].block_index > i + 1) {
+                    processes[j].block_index--;
+                }
+            }
+            
+            manager->block_count--;
+            merged = true;
+            i--; // Check this position again as there might be more merging possible
+        }
+    }
+    
+    return merged;
 }
 
 /*######################################################################################################################*/
