@@ -11,8 +11,8 @@ Section: U02
 
 Continuous Memory Allocation
 ==================
-//Fix this
-This program simulates the banker's algorithm to avoid a deadlock for systems with multiple instances of each resource type.
+This program focuses on the implementation and comparative analysis of three core continuous memory
+allocation strategies — First-fit, Best-fit, and Worst-fit — along with Memory coalescing and Block reuse techniques. These mechanisms simulate fundamental memory management behavior in modern operating systems.
 
 Compilation Instructions:
 ------------------------
@@ -26,8 +26,7 @@ Running the Program:
 1. Make sure you have the input.txt file in the same directory as the executable
 2. Run the program using:
     ./memory_allocator
-3. Test with //fix this
-4. To quit, press 'q'
+3. To quit, press 'q'
 
 Input File Format:
 ----------------
